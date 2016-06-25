@@ -2,6 +2,15 @@ import os
 import pickle
 import random
 
+#A implementer
+# - Gestion des majuscules au niveau de l'input et du mot initial
+# - Gestion de la victoire : la condition de victoire ne semble pas fonctionner
+
+
+
+
+
+
 #This function should only be called when the dictionnary has been updated 
 def dictionnary_size():
 	
@@ -24,13 +33,28 @@ def random_start(size):
 	return word
 
 
+def compute_result(trials, word):
+	result = []
+	for letter in word:
+		hypothesis = False
+		for trial in trials:
+			if letter==trial:
+				hypothesis = True
+		if hypothesis:
+			result.append(letter)
+		else:
+			result.append("_")
+	return result
+
+	
 
 
 #This fonction describes the game process
 def game_on(input_word):
-	number_of_characters = len(input_word);
-	print("Le mot a trouver contient {0} caracteres").format(number_of_characters-1);
-	for lettre in input_word:
+	reframe_input = input_word[:-1] #Used to remove the last character
+	number_of_characters = len(reframe_input);
+	print("Le mot a trouver contient {0} caracteres").format(number_of_characters);
+	for lettre in reframe_input:
 		print("_ "),
 	print
 	print("----------------------------------------------------------------")
@@ -39,19 +63,55 @@ def game_on(input_word):
 	the_trials = []
 	print(len(the_trials))
 	
+
 	#While loop as the game goes on
 	#TBContinued : the checking system is the hardest part obviously
 	while not game_over:
-		if len(the_trials)==0:
-			print("Premier essai")
-		else:
-			for el in the_trials:
-				if el in input_word:
-					the_positions 	
+		#Checking if the user has won
+		if len(the_trials) != 0:
+			if compute_result(the_trials, reframe_input) == reframe_input:
+				print("GG!!!!!!!!!")
+				game_over = True
+				break
+		#Checking if the user has lost
+		if len(the_trials)==10:
+			print("Game over")
+			game_over = True
+		else: #Go on with the game
+			#Display results so far
+			if len(the_trials)==0:
+				print("Premier essai")
+			else:
+				current_state = compute_result(the_trials, reframe_input)
+				print(current_state)
+				print("Vous avez essaye les lettres suivantes : ")
+				print(" ".join(the_trials))
+			print("Il vous reste {nb_restant} essais").format(nb_restant=10-len(the_trials))
 
-		print("OK")
-		game_over = True
-
+			#Ask for user input
+			while True: #The while loop checks that user's input is correct
+				user_input = raw_input('Merci dentrer une lettre : ')
+				if type(user_input) != str:
+					print("Vous navez pas entrer une chaine de caracteres")
+					continue
+				elif len(user_input) != 1:
+					print("Vous avez entrer plus d'une lettre")
+					continue
+				elif user_input in the_trials:
+					print("Vous avez deja entre ce caractere")
+					continue
+				else:
+					print("Votre input est correct")
+					break
+			the_trials.append(user_input)
+			if user_input in reframe_input:
+				print("La lettre est bien dans le mot a deviner")
+			else:
+				print("DOMMAGE! La lettre n'est pas dans le mot")
+			print("Tour fini")
+			print
+			print("----------------------------------------------------------------")
+			print
 
 
 
