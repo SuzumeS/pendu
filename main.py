@@ -2,9 +2,9 @@ import os
 import pickle
 import random
 
-#A implementer
-# - Gestion des majuscules au niveau de l'input et du mot initial
-# - Gestion de la victoire : la condition de victoire ne semble pas fonctionner
+# A implementer
+# - Prendre en parametres une liste de pokemon
+# - Mettre en place le vrai décompte des erreurs et refixer le total disponible + afficher score final
 
 
 
@@ -51,7 +51,7 @@ def compute_result(trials, word):
 
 #This fonction describes the game process
 def game_on(input_word):
-	reframe_input = input_word[:-1] #Used to remove the last character
+	reframe_input = input_word[:-1].lower() #Used to remove the last character
 	number_of_characters = len(reframe_input);
 	print("Le mot a trouver contient {0} caracteres").format(number_of_characters);
 	for lettre in reframe_input:
@@ -69,7 +69,7 @@ def game_on(input_word):
 	while not game_over:
 		#Checking if the user has won
 		if len(the_trials) != 0:
-			if compute_result(the_trials, reframe_input) == reframe_input:
+			if ''.join(compute_result(the_trials, reframe_input)) == reframe_input:
 				print("GG!!!!!!!!!")
 				game_over = True
 				break
@@ -97,12 +97,13 @@ def game_on(input_word):
 				elif len(user_input) != 1:
 					print("Vous avez entrer plus d'une lettre")
 					continue
-				elif user_input in the_trials:
+				elif user_input.lower() in the_trials:
 					print("Vous avez deja entre ce caractere")
 					continue
 				else:
 					print("Votre input est correct")
 					break
+			user_input = user_input.lower()
 			the_trials.append(user_input)
 			if user_input in reframe_input:
 				print("La lettre est bien dans le mot a deviner")
